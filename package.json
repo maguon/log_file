@@ -1,0 +1,27 @@
+{
+    "name": "log_file",
+    "version": "0.0.1",
+    "dependencies": {
+        "assert-plus": "*",
+        "bunyan": "*",
+        "extend": "*",
+        "gm": "1.22.0",
+        "log4js": "*",
+        "mongodb": "2.0.27",
+        "posix-getopt": "1.0.0",
+        "restify": "4.0.3",
+        "restify-errors" :"*",
+        "seq" : "*"
+    },
+    "devDependencies": {
+        "mocha": "*",
+        "superagent": "*",
+        "supertest": "*"
+    },
+    "scripts": {
+        "start": "node main.js",
+        "test": "mocha test"
+    },
+    "author": "myxxjs",
+    "license": ""
+}
