@@ -23,5 +23,7 @@
         "test": "mocha test"
     },
     "author": "myxxjs",
-    "license": ""
+    "description" : "Myxxjs file module",
+    "repository" :  "https://github.com/maguon/log_file",
+    "license": "MIT"
 }
