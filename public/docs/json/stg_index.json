@@ -12,7 +12,7 @@
       "url": "https://github.com/maguon/log_file"
     }
   },
-  "host": "localhost:9002",
+  "host": "stg.myxxjs.com:9002",
   "basePath": "/api",
   "tags": [
     {
