@@ -7,7 +7,7 @@
         "extend": "*",
         "gm": "1.22.0",
         "log4js": "*",
-        "mongodb": "2.0.27",
+        "mongodb": "2.2.19",
         "posix-getopt": "1.0.0",
         "restify": "4.0.3",
         "restify-errors" :"*",
