@@ -1,0 +1,226 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "The documents for myxxjs upload and download image or file api",
+    "version": "1.0.0",
+    "title": "Logistic file api doc",
+    "contact": {
+      "email": "info@myxxjs.com"
+    },
+    "license": {
+      "name": "View source at github",
+      "url": "https://github.com/maguon/log_file"
+    }
+  },
+  "host": "localhost:9002",
+  "basePath": "/api",
+  "tags": [
+    {
+      "name": "image",
+      "description": "download and upload image files ",
+      "externalDocs": {
+        "description": " mimetype file api"
+      }
+    },
+    {
+      "name": "file",
+      "description": "download and upload common files ",
+      "externalDocs": {
+        "description": " common file api"
+      }
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/user/{userId}/image/{imageId}": {
+      "get": {
+        "tags": [
+          "image"
+        ],
+        "summary": "get image file",
+        "description": "web or mobile device load image ",
+        "operationId": "getImage",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "The user unique id",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "imageId",
+            "in": "path",
+            "description": "The image unique id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/user/{userId}/image": {
+      "post": {
+        "tags": [
+          "image"
+        ],
+        "summary": "uploads an image",
+        "description": "imageType(1:DriverLic,2:TruckLic,3:Insurance)",
+        "operationId": "uploadFile",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "user unique id",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "imageType",
+            "in": "query",
+            "description": "image type (1:DriverLic,2:TruckLic,3:Insurance)",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "image",
+            "in": "formData",
+            "description": "file to upload",
+            "required": true,
+            "type": "file"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/user/{userId}/file": {
+      "post": {
+        "tags": [
+          "file"
+        ],
+        "summary": "uploads a common file",
+        "description": "fileType(1:planning)",
+        "operationId": "uploadFile",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "user unique id",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "fileType",
+            "in": "query",
+            "description": "file type (1:planing)",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "userType",
+            "in": "query",
+            "description": "user type",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "file",
+            "in": "formData",
+            "description": "file to upload",
+            "required": true,
+            "type": "file"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      },"get": {
+        "tags": [
+          "file"
+        ],
+        "summary": "get common file",
+        "description": "get file id list by params ",
+        "operationId": "getFileList",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "The user unique id",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "userType",
+            "in": "query",
+            "description": "The user type",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "fileType",
+            "in": "query",
+            "description": "The file type",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "fileId",
+            "in": "query",
+            "description": "The file id",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "successful operation"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ImageMeta" :  {
+      "type": "object",
+      "required": [
+        "imageType"
+      ],
+      "properties": {
+        "imageType": {
+          "type": "integer"
+        }
+      }
+    }
+  }
+
+}

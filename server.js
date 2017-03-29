@@ -4,6 +4,7 @@
 var restify = require('restify');
 var serverLogger = require('./util/ServerLogger.js');
 var image = require('./bl/Image.js');
+var fileBl = require('./bl/FileBl.js');
 
 function createServer() {
 
@@ -42,12 +43,32 @@ function createServer() {
     server.use(restify.fullResponse());
     server.use(restify.bodyParser({uploadDir:__dirname+'/uploads/'}));
 
-    var STATIS_FILE_RE = /\.(css|js|jpe?g|png|gif|less|eot|svg|bmp|tiff|ttf|otf|woff|pdf|ico|json|wav|ogg|mp3?|xml)$/i;
-    server.get(/\/apidoc\/?.*/, restify.serveStatic({
-        directory: './public'
+    var STATIS_FILE_RE = /\.(css|js|jpe?g|png|gif|less|eot|svg|bmp|tiff|ttf|otf|woff|pdf|ico|json|wav|ogg|mp3?|xml|woff2|map)$/i;
+    server.get(STATIS_FILE_RE, restify.serveStatic({ directory: './public/docs', default: 'index.html', maxAge: 0 }));
+//    server.get(/^\/((.*)(\.)(.+))*$/, restify.serveStatic({ directory: './TruMenuWeb', default: "index.html" }));
+
+
+
+    server.get(/\.html$/i,restify.serveStatic({
+        directory: './public/docs',
+        maxAge: 0}));
+    //For 'abc.html?name=zzz'
+    server.get(/\.html\?/i,restify.serveStatic({
+        directory: './public/docs',
+        maxAge: 0}));
+    server.get('/',restify.serveStatic({
+        directory: './public/docs',
+        default: 'index.html',
+        maxAge: 0
     }));
+
+
     server.get('/api/user/:userId/image/:imageId',image.getImageById);
     server.post({path:'/api/user/:userId/image',contentType: 'multipart/form-data'},image.uploadImage);
+
+    server.get('/api/user/:userId/file' , fileBl.getFileList);
+    server.post({path:'/api/user/:userId/file',contentType: 'multipart/form-data'},fileBl.uploadFile);
+    server.get('/api/user/:userId/file/:fileId' , fileBl.getFile);
 
 
 

@@ -192,9 +192,10 @@ function saveImage(image,metaData,callback){
                         if (err) {
                             return callback(err,imageId);
                         } else {
-                            fs.unlink(image.path, function (err) {
-                                return callback(null, imageId);
-                            });
+                            return callback(null, imageId);
+                            /*fs.unlink(image.path, function (err) {
+
+                            });*/
                         }
                     });
                 })
