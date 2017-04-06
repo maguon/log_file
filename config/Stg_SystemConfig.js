@@ -5,7 +5,7 @@ var loggerConfig = {
         { type: 'console' },
         {
             "type": "file",
-            "filename": "../logs/logistic.log",
+            "filename": "../stage/log_file.html",
             "maxLogSize": 2048000,
             "backups": 10
         }
