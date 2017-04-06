@@ -1,4 +1,5 @@
 
+var logLevel = 'DEBUG';
 var loggerConfig = {
     level : 'debug',
     config : {
@@ -18,6 +19,7 @@ var mongoConfig = {
     connect : 'mongodb://localhost:27017/log_file'
 }
 module.exports = {
+    logLevel : logLevel ,
     loggerConfig : loggerConfig,
     mongoConfig : mongoConfig
 }
