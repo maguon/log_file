@@ -29,6 +29,7 @@ function uploadFile(req,res,next){
             var fileObj ={
                 id : result
             }
+            logger.info(' uploadFile ' + 'success')
             resUtil.resetQueryRes(res, fileObj);
             return next();
         }

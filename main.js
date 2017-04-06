@@ -1,7 +1,8 @@
 var getopt = require('posix-getopt');
 var restify = require('restify');
 var webServer = require('./server.js');
-
+var serverLogger = require('./util/ServerLogger.js');
+var logger = serverLogger.createLogger('main.js');
 
 ///--- Globals
 
@@ -51,7 +52,7 @@ function usage(msg) {
 
 
     server.listen((opt.port?opt.port:9002), function onListening() {
-        console.log('Log file system start ' + server.url);
+        logger.info('Log file system start ' + server.url);
     });
 
 })();
