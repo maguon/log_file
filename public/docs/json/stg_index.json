@@ -59,7 +59,9 @@
             "description": "successful operation"
           }
         }
-      },
+      }
+    },
+    "/user/{userId}/image": {
       "post": {
         "tags": [
           "image"
