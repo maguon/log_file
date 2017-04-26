@@ -34,7 +34,7 @@
     "http"
   ],
   "paths": {
-    "/user/{userId}/image/{imageId}": {
+    "/image/{imageId}": {
       "get": {
         "tags": [
           "image"
@@ -46,13 +46,6 @@
           "application/json"
         ],
         "parameters": [
-          {
-            "name": "userId",
-            "in": "path",
-            "description": "The user unique id",
-            "required": true,
-            "type": "integer"
-          },
           {
             "name": "imageId",
             "in": "path",
@@ -66,9 +59,7 @@
             "description": "successful operation"
           }
         }
-      }
-    },
-    "/user/{userId}/image": {
+      },
       "post": {
         "tags": [
           "image"

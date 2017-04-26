@@ -63,7 +63,7 @@ function createServer() {
     }));
 
 
-    server.get('/api/user/:userId/image/:imageId',image.getImageById);
+    server.get('/api/image/:imageId',image.getImageById);
     server.post({path:'/api/user/:userId/image',contentType: 'multipart/form-data'},image.uploadImage);
 
     server.get('/api/user/:userId/file' , fileBl.getFileList);
