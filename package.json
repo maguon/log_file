@@ -6,12 +6,12 @@
         "bunyan": "*",
         "extend": "*",
         "gm": "1.22.0",
-        "log4js": "*",
+        "log4js": "2.1.0",
         "mongodb": "2.2.19",
         "posix-getopt": "1.0.0",
         "restify": "4.0.3",
-        "restify-errors" :"*",
-        "seq" : "*"
+        "restify-errors": "*",
+        "seq": "*"
     },
     "devDependencies": {
         "mocha": "*",
@@ -23,7 +23,7 @@
         "test": "mocha test"
     },
     "author": "myxxjs",
-    "description" : "Myxxjs file module",
-    "repository" :  "https://github.com/maguon/log_file",
+    "description": "Myxxjs file module",
+    "repository": "https://github.com/maguon/log_file",
     "license": "MIT"
 }

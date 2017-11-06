@@ -1,15 +1,16 @@
 
 var logLevel = 'DEBUG';
 var loggerConfig = {
-    appenders: [
-        { type: 'console' },
-        {
+    appenders: {
+        console: { type: 'console' } ,
+        file : {
             "type": "file",
             "filename": "../stage/log_file.html",
             "maxLogSize": 2048000,
             "backups": 10
         }
-    ]
+    },
+    categories: { default: { appenders: ['console','file'], level: 'debug' } }
 }
 
 
