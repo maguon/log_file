@@ -59,6 +59,16 @@ function getMetaData(params, callback) {
     if(params.fileId){
         queryParams['_id'] = params.fileId;
     }
+    var dateObj ={}
+    if(params.startDate){
+        dateObj.$gte=new Date(params.startDate) ;
+    }
+    if(params.endDate){
+        dateObj.$lte=new Date(params.endDate) ;
+    }
+    if(params.startDate!=null ||params.endDate!= null){
+        queryParams['uploadDate'] = dateObj;
+    }
     mongodb.getDb(function (err, db) {
         if (err) {
             logger.error(' getMetaData ' + err.message);
