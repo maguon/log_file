@@ -154,7 +154,8 @@
             "description": "successful operation"
           }
         }
-      },"get": {
+      },
+      "get": {
         "tags": [
           "file"
         ],
@@ -206,6 +207,20 @@
             "description": "The file upload end date",
             "required": false,
             "type": "date"
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "description": "the start number for page",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "the size number for page",
+            "required": false,
+            "type": "integer"
           }
         ],
         "responses": {

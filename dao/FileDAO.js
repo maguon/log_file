@@ -69,6 +69,7 @@ function getMetaData(params, callback) {
     if(params.startDate!=null ||params.endDate!= null){
         queryParams['uploadDate'] = dateObj;
     }
+
     mongodb.getDb(function (err, db) {
         if (err) {
             logger.error(' getMetaData ' + err.message);
@@ -81,9 +82,16 @@ function getMetaData(params, callback) {
                 return callback(err, null);
             }
             // get meta data
-            collection.find(queryParams).toArray(function (err, result) {
-                return callback(err, result);
-            });
+            if(params.start&&params.size){
+                collection.find(queryParams).limit(params.size).skip(params.start).toArray(function (err, result) {
+                    return callback(err, result);
+                });
+            } else{
+                collection.find(queryParams).toArray(function (err, result) {
+                    return callback(err, result);
+                });
+            }
+
         });
     });
 }
