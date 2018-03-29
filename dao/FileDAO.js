@@ -83,7 +83,7 @@ function getMetaData(params, callback) {
             }
             // get meta data
             if(params.start&&params.size){
-                collection.find(queryParams).limit(params.size).skip(params.start).toArray(function (err, result) {
+                collection.find(queryParams).limit(Number.parseInt(params.size)).skip(Number.parseInt(params.start)).toArray(function (err, result) {
                     return callback(err, result);
                 });
             } else{
