@@ -274,7 +274,7 @@
     "/user/{userId}/video": {
       "post": {
         "tags": [
-          "file"
+          "video"
         ],
         "summary": "uploads a video",
         "description": "video(1:car)",
@@ -355,7 +355,7 @@
           }
         }
       }
-    },
+    }
   },
   "definitions": {
     "ImageMeta" :  {
