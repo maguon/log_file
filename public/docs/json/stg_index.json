@@ -188,6 +188,13 @@
             "type": "string"
           },
           {
+            "name": "videoType",
+            "in": "query",
+            "description": "The video type",
+            "required": false,
+            "type": "string"
+          },
+          {
             "name": "fileId",
             "in": "query",
             "description": "The file id",
@@ -263,7 +270,92 @@
           }
         }
       }
-    }
+    },
+    "/user/{userId}/video": {
+      "post": {
+        "tags": [
+          "file"
+        ],
+        "summary": "uploads a video",
+        "description": "video(1:car)",
+        "operationId": "uploadVideo",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "user unique id",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "videoType",
+            "in": "query",
+            "description": "video type (1:car)",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "userType",
+            "in": "query",
+            "description": "user type",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "file",
+            "in": "formData",
+            "description": "video to upload",
+            "required": true,
+            "type": "file"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/user/{userId}/file/{fileId}/video.mp4": {
+      "get": {
+        "tags": [
+          "video"
+        ],
+        "summary": "get video",
+        "description": "web or mobile device get video",
+        "operationId": "getVideo",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "The user unique id",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "fileId",
+            "in": "path",
+            "description": "The file unique id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
   },
   "definitions": {
     "ImageMeta" :  {

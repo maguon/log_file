@@ -92,8 +92,84 @@ function getFileList(req,res,next){
         }
     })
 }
+
+function getVideo(req,res,next){
+    var params = req.params;
+    fileDAO.getMetaData(params,function(err,col){
+        if (err || !col) {
+            logger.error(' getFile ' + sysMsg.IMG_QUERY_NO_EXIST + params.imageId);
+            return resUtil.resInternalError(err, res, next);
+        }
+
+        var etag = req.headers['if-none-match'];
+        if (etag && col.md5 && etag == col.md5) {
+            res.send(304);
+            return next();
+        }
+        fileDAO.getFile(params, function (err, fstream) {
+            if (err) {
+                logger.error(' getFile ' + err.message);
+                return resUtil.resInternalError(err, res, next);
+            }
+
+            res.cache({maxAge: 31536000});
+            //res.set("cache-control","no-cache");
+            res.set('content-type', col[0].contentType);
+            res.set('last-modified', col[0].uploadDate);
+            res.set('etag', col[0].md5);
+            res.set('content-length', col[0].length);
+            res.set('Accept-Ranges','bytes')  ;
+            res.set('Cache-Control','no-cache') ;
+            res.set('Content-Range','bytes 0-'+col[0].length+'/'+col[0].length) ;
+            res.writeHead(200);
+            fstream.pipe(res);
+
+            fstream.on('error', function(err){
+                logger.error(' getVideo' + err.message);
+                resUtil.resInternalError(error, res, next);
+            });
+            fstream.on('close', function(){
+                logger.info(' getVideo ' + params.fileId + ' success');
+                return next();
+            });
+        });
+
+    })
+
+}
+
+function uploadVideo(req,res,next){
+    var file = req.files.file;
+    var params = req.params;
+    var metadata ={};
+    if(params.videoType){
+        metadata.videoType = params.videoType;
+    }
+    if(params.userType){
+        metadata.userType = params.userType;
+    }
+    if(params.userId){
+        metadata.userId = params.userId;
+    }
+    fileDAO.saveFile(file, metadata,function(error,result){
+        if (error) {
+            logger.error(' uploadVideo ' + error.message);
+            resUtil.resInternalError(error, res, next);
+        }else{
+            var fileObj ={
+                id : result
+            }
+            logger.info(' uploadVideo ' + 'success')
+            resUtil.resetQueryRes(res, fileObj);
+            return next();
+        }
+    })
+
+}
 module.exports = {
     uploadFile : uploadFile ,
     getFile : getFile ,
-    getFileList : getFileList
+    getFileList : getFileList ,
+    uploadVideo : uploadVideo ,
+    getVideo : getVideo
 }

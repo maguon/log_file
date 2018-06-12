@@ -70,7 +70,9 @@ function createServer() {
 
     server.get('/api/user/:userId/file' , fileBl.getFileList);
     server.post({path:'/api/user/:userId/file',contentType: 'multipart/form-data'},fileBl.uploadFile);
+    server.post({path:'/api/user/:userId/video',contentType: 'multipart/form-data'},fileBl.uploadVideo);
     server.get('/api/user/:userId/file/:fileId' , fileBl.getFile);
+    server.get('/api/user/:userId/file/:fileId/video.mp4' , fileBl.getVideo);
 
 
 

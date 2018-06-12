@@ -53,6 +53,9 @@ function getMetaData(params, callback) {
     if(params.fileType){
         queryParams['metadata.fileType'] = params.fileType;
     }
+    if(params.videoType){
+        queryParams['metadata.videoType'] = params.videoType;
+    }
     if(params.userType){
         queryParams['metadata.userType'] = params.userType;
     }
