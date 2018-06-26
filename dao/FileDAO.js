@@ -8,6 +8,7 @@ var fs = require('fs');
 var Seq = require('seq');
 var ObjectID = require('mongodb').ObjectID;
 var GridStore = require('mongodb').GridStore;
+var GridFSBucket = require('mongodb').GridFSBucket;
 
 
 function saveFile(file,metaData,callback){
@@ -107,7 +108,7 @@ function getFile(params,callback){
             return callback(err, null);
         }
 
-        var gridStore = new GridStore(db,fileId, '', "r");
+        /*var gridStore = new GridStore(db,fileId, '', "r");
         gridStore.open(function (err, gridStore) {
 
             if (err) {
@@ -122,7 +123,15 @@ function getFile(params,callback){
             logger.debug(' getFile ' + fileId +' success');
             return callback(null, stream);
 
-        });
+        });*/
+        var bucket = new GridFSBucket(db,{chunkSizeBytes:3*1024*1024});
+        if(params.start && params.end){
+            var stream = bucket.openDownloadStream(fileId,{start:params.start,end:params.end})
+        }else{
+            var stream = bucket.openDownloadStream(fileId,{start:params.start,end:params.end})
+        }
+
+        callback(null,stream)
     });
 }
 module.exports = {

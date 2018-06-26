@@ -96,8 +96,8 @@ function getFileList(req,res,next){
 function getVideo(req,res,next){
     var params = req.params;
     fileDAO.getMetaData(params,function(err,col){
-        if (err || !col) {
-            logger.error(' getFile ' + sysMsg.IMG_QUERY_NO_EXIST + params.imageId);
+        if (err || !col || col.length<1) {
+            logger.error(' getFile ' + sysMsg.IMG_QUERY_NO_EXIST + params.fileId);
             return resUtil.resInternalError(err, res, next);
         }
 
@@ -106,22 +106,61 @@ function getVideo(req,res,next){
             res.send(304);
             return next();
         }
-        fileDAO.getFile(params, function (err, fstream) {
+        var rangeRequest = readRangeHeader(req.headers['range'], col[0].length);
+        console.log(rangeRequest)
+        if(rangeRequest !=null){
+            var start = rangeRequest.Start;
+            var end = rangeRequest.End;
+        }
+        if (rangeRequest == null ) {
+            fileDAO.getFile(params, function (err, fstream) {
+                if (err) {
+                    logger.error(' getFile ' + err.message);
+                    return resUtil.resInternalError(err, res, next);
+                }
+
+                res.cache({maxAge: 31536000});
+                res.set('content-type', col[0].contentType);
+                res.set('last-modified', col[0].uploadDate);
+                res.set('etag', col[0].md5);
+                res.set('content-length', col[0].length);
+                res.set('Accept-Ranges', 'bytes');
+                res.set('Cache-Control', 'no-cache');
+                res.writeHead(200);
+                fstream.pipe(res);
+                fstream.on('error', function(err){
+                    logger.error(' getVideo' + err.message);
+                    resUtil.resInternalError(error, res, next);
+                });
+                fstream.on('close', function(){
+                    logger.info(' getVideo ' + params.fileId + ' success');
+                    return next();
+                });
+            });
+            return;
+        }
+
+
+
+        // If the range can't be fulfilled.
+        if (start >= col[0].length || end >= col[0].length) {
+            res.set('Content-Range','bytes 0-'+col[0].length+'/'+col[0].length) ;
+            res.writeHead(416);
+            return ;
+        }
+        fileDAO.getFile({fileId:params.fileId,start:start,end:end}, function (err, fstream) {
             if (err) {
                 logger.error(' getFile ' + err.message);
                 return resUtil.resInternalError(err, res, next);
             }
 
             res.cache({maxAge: 31536000});
-            //res.set("cache-control","no-cache");
+            res.set('Content-Range','bytes ' + start + '-' + end + '/' + col[0].length) ;
+            res.set('content-length', start == end ? 0 : (end - start + 1));
             res.set('content-type', col[0].contentType);
-            res.set('last-modified', col[0].uploadDate);
-            res.set('etag', col[0].md5);
-            res.set('content-length', col[0].length);
             res.set('Accept-Ranges','bytes')  ;
             res.set('Cache-Control','no-cache') ;
-            res.set('Content-Range','bytes 0-'+col[0].length+'/'+col[0].length) ;
-            res.writeHead(200);
+            res.writeHead(206);
             fstream.pipe(res);
 
             fstream.on('error', function(err){
@@ -165,6 +204,41 @@ function uploadVideo(req,res,next){
         }
     })
 
+}
+
+function readRangeHeader(range, totalLength) {
+    /*
+     * Example of the method &apos;split&apos; with regular expression.
+     *
+     * Input: bytes=100-200
+     * Output: [null, 100, 200, null]
+     *
+     * Input: bytes=-200
+     * Output: [null, null, 200, null]
+     */
+
+    if (range == null || range.length == 0)
+        return null;
+
+    var array = range.split(/bytes=([0-9]*)-([0-9]*)/);
+    var start = parseInt(array[1]);
+    var end = parseInt(array[2]);
+    var result = {
+        Start: isNaN(start) ? 0 : start,
+        End: isNaN(end) ? (totalLength - 1) : end
+    };
+
+    if (!isNaN(start) && isNaN(end)) {
+        result.Start = start;
+        result.End = totalLength - 1;
+    }
+
+    if (isNaN(start) && !isNaN(end)) {
+        result.Start = totalLength - end;
+        result.End = totalLength - 1;
+    }
+
+    return result;
 }
 module.exports = {
     uploadFile : uploadFile ,
