@@ -67,7 +67,7 @@ function getFile(req,res,next){
 
             fstream.on('error', function(err){
                 logger.error(' getFile' + err.message);
-                resUtil.resInternalError(error, res, next);
+                resUtil.resInternalError(err, res, next);
             });
             fstream.on('close', function(){
                 logger.info(' getFile ' + params.fileId + ' success');
