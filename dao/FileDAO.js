@@ -108,7 +108,7 @@ function getFile(params,callback){
             return callback(err, null);
         }
 
-        /*var gridStore = new GridStore(db,fileId, '', "r");
+        var gridStore = new GridStore(db,fileId, '', "r");
         gridStore.open(function (err, gridStore) {
 
             if (err) {
@@ -123,7 +123,18 @@ function getFile(params,callback){
             logger.debug(' getFile ' + fileId +' success');
             return callback(null, stream);
 
-        });*/
+        });
+    });
+}
+
+function getVideo (params,callback){
+    var fileId = params.fileId;
+    mongodb.getDb(function (err, db) {
+        if (err) {
+            logger.error(' getFile ' + err.message);
+            db.close();
+            return callback(err, null);
+        }
         var bucket = new GridFSBucket(db,{chunkSizeBytes:3*1024*1024});
         if(params.start && params.end){
             var stream = bucket.openDownloadStream(fileId,{start:params.start,end:params.end})
@@ -137,5 +148,6 @@ function getFile(params,callback){
 module.exports = {
     saveFile : saveFile ,
     getMetaData : getMetaData ,
-    getFile : getFile
+    getFile : getFile,
+    getVideo : getVideo
 }

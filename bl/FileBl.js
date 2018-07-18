@@ -59,6 +59,10 @@ function getFile(req,res,next){
                 logger.error(' getFile' + err.message);
                 resUtil.resInternalError(err, res, next);
             });
+            fstream.on('close', function(){
+                logger.info(' getFile ' + params.fileId + ' success');
+                return next();
+            });
 
             res.cache({maxAge: 31536000});
             //res.set("cache-control","no-cache");
@@ -70,10 +74,7 @@ function getFile(req,res,next){
             fstream.pipe(res);
 
 
-            fstream.on('close', function(){
-                logger.info(' getFile ' + params.fileId + ' success');
-                return next();
-            });
+
         });
 
     })
@@ -114,7 +115,7 @@ function getVideo(req,res,next){
             var end = rangeRequest.End;
         }
         if (rangeRequest == null ) {
-            fileDAO.getFile(params, function (err, fstream) {
+            fileDAO.getVideo(params, function (err, fstream) {
                 if (err) {
                     logger.error(' getFile ' + err.message);
                     return resUtil.resInternalError(err, res, next);
