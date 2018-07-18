@@ -55,6 +55,10 @@ function getFile(req,res,next){
                 logger.error(' getFile ' + err.message);
                 return resUtil.resInternalError(err, res, next);
             }
+            fstream.on('error', function(err){
+                logger.error(' getFile' + err.message);
+                resUtil.resInternalError(err, res, next);
+            });
 
             res.cache({maxAge: 31536000});
             //res.set("cache-control","no-cache");
@@ -65,10 +69,7 @@ function getFile(req,res,next){
             res.writeHead(200);
             fstream.pipe(res);
 
-            fstream.on('error', function(err){
-                logger.error(' getFile' + err.message);
-                resUtil.resInternalError(err, res, next);
-            });
+
             fstream.on('close', function(){
                 logger.info(' getFile ' + params.fileId + ' success');
                 return next();
