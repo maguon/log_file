@@ -17,7 +17,7 @@ function createServer() {
 
     server.pre(restify.pre.sanitizePath());
     server.pre(restify.pre.userAgentConnection());
-    server.use(restify.throttle({
+    server.use(restify.plugins.throttle({
         burst: 100,
         rate: 50,
         ip: true
@@ -26,24 +26,24 @@ function createServer() {
     restify.CORS.ALLOW_HEADERS.push('user-name');
     restify.CORS.ALLOW_HEADERS.push('user-type');
     restify.CORS.ALLOW_HEADERS.push('user-id');
+    restify.CORS.ALLOW_HEADERS.push('client-id','tenant','__setxhr_');
     restify.CORS.ALLOW_HEADERS.push("Access-Control-Allow-Origin");
     restify.CORS.ALLOW_HEADERS.push("Access-Control-Allow-Credentials");
-    restify.CORS.ALLOW_HEADERS.push("Access-Control-Allow-Methods","GET");
-    restify.CORS.ALLOW_HEADERS.push("Access-Control-Allow-Methods","POST");
-    restify.CORS.ALLOW_HEADERS.push("Access-Control-Allow-Methods","PUT");
-    restify.CORS.ALLOW_HEADERS.push("Access-Control-Allow-Methods","DELETE");
+    restify.CORS.ALLOW_HEADERS.push("GET");
+    restify.CORS.ALLOW_HEADERS.push("POST");
+    restify.CORS.ALLOW_HEADERS.push("PUT");
+    restify.CORS.ALLOW_HEADERS.push("DELETE");
     restify.CORS.ALLOW_HEADERS.push("Access-Control-Allow-Headers","accept,api-version, content-length, content-md5,x-requested-with,content-type, date, request-id, response-time");
-    server.use(restify.CORS({ headers: [ 'client-id' ], origins: ['*'] }));
-    server.use(restify.CORS({ headers: [ 'auth-token' ], origins: ['*'] }));
-    server.use(restify.CORS({ headers: [ 'tenant' ], origins: ['*'] }));
-    server.use(restify.CORS({ headers: [ '__setxhr_' ], origins: ['*'] }));
-    server.use(restify.acceptParser(server.acceptable));
-    server.use(restify.dateParser());
-    server.use(restify.authorizationParser());
-    server.use(restify.queryParser());
-    server.use(restify.gzipResponse());
-    server.use(restify.fullResponse());
-    server.use(restify.bodyParser({uploadDir:__dirname+'/uploads/'}));
+    server.use(restify.CORS());
+    // Use the common stuff you probably want
+    //hard code the upload folder for now
+    server.use(restify.plugins.bodyParser({uploadDir:__dirname+'/../uploads/'}));
+    server.use(restify.plugins.acceptParser(server.acceptable));
+    server.use(restify.plugins.dateParser());
+    server.use(restify.plugins.authorizationParser());
+    server.use(restify.plugins.queryParser());
+    server.use(restify.plugins.gzipResponse());
+
 
     var STATIS_FILE_RE = /\.(css|js|jpe?g|png|gif|less|eot|svg|bmp|tiff|ttf|otf|woff|pdf|ico|json|wav|ogg|mp3?|xml|woff2|map)$/i;
     server.get(STATIS_FILE_RE, restify.serveStatic({ directory: './public/docs', default: 'index.html', maxAge: 0 }));

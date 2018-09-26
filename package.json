@@ -9,7 +9,7 @@
         "log4js": "2.1.0",
         "mongodb": "2.2.19",
         "posix-getopt": "1.0.0",
-        "restify": "4.0.3",
+        "restify": "4.3.4",
         "restify-errors": "*",
         "seq": "*"
     },
