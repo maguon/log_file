@@ -111,7 +111,7 @@
           "file"
         ],
         "summary": "uploads a common file",
-        "description": "fileType(1:planning)",
+        "description": "fileType(1:planning,2:car_fee)",
         "operationId": "uploadFile",
         "consumes": [
           "multipart/form-data"
