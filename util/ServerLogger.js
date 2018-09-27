@@ -2,11 +2,8 @@
  * Created by ling xue on 14-4-29.
  */
 
-var assert = require('assert-plus');
-var bunyan = require('bunyan');
-var sysConfig = require('../config/SystemConfig.js');
 
-var HttpError = require('restify-errors').HttpError;;
+var sysConfig = require('../config/SystemConfig.js');
 
 
 
