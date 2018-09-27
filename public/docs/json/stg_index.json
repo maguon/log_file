@@ -130,7 +130,7 @@
           {
             "name": "fileType",
             "in": "query",
-            "description": "file type (1:planing)",
+            "description": "file type (1:planing,2:car_fee)",
             "required": true,
             "type": "integer"
           },
