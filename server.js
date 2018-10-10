@@ -37,7 +37,7 @@ function createServer() {
     server.use(restify.CORS());
     // Use the common stuff you probably want
     //hard code the upload folder for now
-    server.use(restify.plugins.bodyParser({uploadDir:__dirname+'/../uploads/'}));
+    server.use(restify.plugins.bodyParser({uploadDir:__dirname+'/uploads/'}));
     server.use(restify.plugins.acceptParser(server.acceptable));
     server.use(restify.plugins.dateParser());
     server.use(restify.plugins.authorizationParser());
