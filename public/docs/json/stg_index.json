@@ -86,7 +86,7 @@
           {
             "name": "imageType",
             "in": "query",
-            "description": "image type (1:DriverLic,2:TruckLic,3:Insurance,4:Damage,5:TruckDamage ,6:Finance,7:transportBill)",
+            "description": "image type (1:DriverLic,2:TruckLic,3:Insurance,4:Damage,5:TruckDamage ,6:Finance,7:transportBill,9.TruckCheck)",
             "required": true,
             "type": "integer"
           },
