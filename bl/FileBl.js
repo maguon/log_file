@@ -150,7 +150,7 @@ function getVideo(req,res,next){
             res.writeHead(416);
             return ;
         }
-        fileDAO.getFile({fileId:params.fileId,start:start,end:end}, function (err, fstream) {
+        fileDAO.getVideo({fileId:params.fileId,start:start,end:end}, function (err, fstream) {
             if (err) {
                 logger.error(' getFile ' + err.message);
                 return resUtil.resInternalError(err, res, next);
