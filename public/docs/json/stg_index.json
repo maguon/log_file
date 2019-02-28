@@ -322,7 +322,7 @@
         }
       }
     },
-    "/user/{userId}/file/{fileId}/video.mp4": {
+    "/file/{fileId}/video.mp4": {
       "get": {
         "tags": [
           "video"
