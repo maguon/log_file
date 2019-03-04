@@ -200,7 +200,7 @@ function uploadVideo(req,res,next){
             var fileObj ={
                 id : result
             }
-            logger.info(' uploadVideo ' + 'success')
+            logger.info(' uploadVideo ' + ' success '+result)
             resUtil.resetQueryRes(res, fileObj);
             return next();
         }
