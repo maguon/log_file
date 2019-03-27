@@ -5,7 +5,13 @@ var sysConfig = require('../../config/SystemConfig.js');
 var logger = serverLogger.createLogger('MongoCon.js');
 
 var db= null;
-MongoClient.connect(sysConfig.mongoConfig.connect,function(err, dbInstance) {
+var options = {
+    server: {
+        auto_reconnect: true,
+        poolSize: 10
+    }
+};
+MongoClient.connect(sysConfig.mongoConfig.connect,options,function(err, dbInstance) {
     if(err){
         logger.error(' connect Mongodb failed ' + err.message);
     }else{
