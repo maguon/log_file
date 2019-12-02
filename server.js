@@ -5,6 +5,7 @@ var restify = require('restify');
 var serverLogger = require('./util/ServerLogger.js');
 var image = require('./bl/Image.js');
 var fileBl = require('./bl/FileBl.js');
+var dfs = require('./bl/Dfs.js');
 
 function createServer() {
 
@@ -71,6 +72,7 @@ function createServer() {
     server.get('/api/user/:userId/file' , fileBl.getFileList);
     server.post({path:'/api/user/:userId/file',contentType: 'multipart/form-data'},fileBl.uploadFile);
     server.post({path:'/api/user/:userId/video',contentType: 'multipart/form-data'},fileBl.uploadVideo);
+    server.post({path:'/api/user/:userId/media',contentType: 'multipart/form-data'},dfs.uploadFile);
     server.get('/api/user/:userId/file/:fileId' , fileBl.getFile);
     server.get('/api/file/:fileId/video.mp4' , fileBl.getVideo);
 

@@ -17,8 +17,21 @@ var loggerConfig = {
 var mongoConfig = {
     connect : 'mongodb://localhost:27017/log_file'
 }
+
+var dfsConfig ={
+    trackers: [
+        {
+            host: 'tracker.fastdfs.com',
+            port: 22122
+        }
+    ],
+    timeout: 10000,
+    defaultExt: 'txt',
+    charset: 'utf8'
+}
 module.exports = {
     logLevel : logLevel ,
     loggerConfig : loggerConfig,
-    mongoConfig : mongoConfig
+    mongoConfig : mongoConfig ,
+    dfsConfig :dfsConfig
 }

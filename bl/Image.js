@@ -13,7 +13,9 @@ function getImageById(req, res, next) {
     var params = req.params;
     var imageId = params.imageId;
     var size = params.size;
-    imageDao.getMetaData(imageId, {size: size}, function (err, col) {
+    res.redirect({
+        pathname: '/images/logo.png'}, next);
+    /*imageDao.getMetaData(imageId, {size: size}, function (err, col) {
         if (err || !col) {
             logger.error(' getImageById ' + sysMsg.IMG_QUERY_NO_EXIST + params.imageId);
             return resUtil.resInternalError(err, res, next);
@@ -44,7 +46,7 @@ function getImageById(req, res, next) {
                 next(false);
             });
         });
-    })
+    })*/
 }
 
 /**
