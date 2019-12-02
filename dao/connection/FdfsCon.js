@@ -9,6 +9,7 @@ var fdfs = new FdfsClient(
 
 var getDfs=function (){
     if (fdfs==null){
+        logger.info('Init fdfs connection')
         fdfs = new FdfsClient(
             sysConfig.dfsConfig
         )

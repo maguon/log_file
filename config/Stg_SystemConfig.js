@@ -21,13 +21,11 @@ var mongoConfig = {
 var dfsConfig ={
     trackers: [
         {
-            host: 'tracker.fastdfs.com',
+            host: '10.30.44.57',
             port: 22122
         }
     ],
-    timeout: 10000,
-    defaultExt: 'txt',
-    charset: 'utf8'
+    timeout: 10000
 }
 module.exports = {
     logLevel : logLevel ,
