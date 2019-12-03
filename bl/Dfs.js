@@ -23,6 +23,7 @@ function uploadVideo(req,res,next){
     metadata.lastModifiedDate = video.lastModifiedDate;
     metadata.uploadDate = new Date().toISOString();
     console.log(metadata);
+    console.log(video);
     Seq().seq(function(){
         var that = this;
         fs.readFile(video, function(err, buf) {
@@ -43,6 +44,9 @@ function uploadVideo(req,res,next){
                 resUtil.resInternalError(error, res, next);
                 return next();
             }else{
+                fs.unlink(video.path, function (err) {
+
+                })
                 metadata.url = result;
                 that();
             }
@@ -56,6 +60,9 @@ function uploadVideo(req,res,next){
                     resUtil.resInternalError(error, res, next);
                     return next();
                 }else{
+                    fs.unlink(req.files.snap.path, function (err) {
+
+                    })
                     metadata.snap = result;
                     that();
                 }
