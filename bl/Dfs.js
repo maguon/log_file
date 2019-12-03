@@ -74,7 +74,7 @@ function uploadVideo(req,res,next){
         videoDAO.saveVideoMetaData(metadata,function(err,result){
             if (err) {
                 logger.error(' uploadVideo snap ' + err.message);
-                resUtil.resInternalError(error, res, next);
+                resUtil.resInternalError(err, res, next);
                 return next();
             }else{
                 var resObj = {
