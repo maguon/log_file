@@ -53,17 +53,17 @@ function uploadVideo(req,res,next){
         })
     }).seq(function(){
         var that = this;
-        if(req.files.snap){
-            fdfsDAO.uploadFile(req.files.snap.path,function(error,result){
+        if(req.files.preview){
+            fdfsDAO.uploadFile(req.files.preview.path,function(error,result){
                 if (error) {
-                    logger.error(' uploadVideo snap ' + error.message);
+                    logger.error(' uploadVideo preview ' + error.message);
                     resUtil.resInternalError(error, res, next);
                     return next();
                 }else{
-                    fs.unlink(req.files.snap.path, function (err) {
+                    fs.unlink(req.files.preview.path, function (err) {
 
                     })
-                    metadata.snap = result;
+                    metadata.preview = result;
                     that();
                 }
             })
@@ -73,12 +73,12 @@ function uploadVideo(req,res,next){
     }).seq(function(){
         videoDAO.saveVideoMetaData(metadata,function(err,result){
             if (err) {
-                logger.error(' uploadVideo snap ' + err.message);
+                logger.error(' uploadVideo preview ' + err.message);
                 resUtil.resInternalError(err, res, next);
                 return next();
             }else{
                 var resObj = {
-                    snap : metadata.snap,
+                    preview : metadata.preview,
                     url : metadata.url
                 }
                 resUtil.resetQueryRes(res, resObj);
