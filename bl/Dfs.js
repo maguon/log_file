@@ -23,10 +23,10 @@ function uploadVideo(req,res,next){
     metadata.lastModifiedDate = video.lastModifiedDate;
     metadata.uploadDate = new Date().toISOString();
     console.log(metadata);
-    console.log(video);
+    console.log(video.path);
     Seq().seq(function(){
         var that = this;
-        fs.readFile(video, function(err, buf) {
+        fs.readFile(video.path, function(err, buf) {
             if(err){
                 logger.error(' uploadVideo  md5 ' + error.message);
                 resUtil.resInternalError(error, res, next);
