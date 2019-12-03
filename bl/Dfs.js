@@ -100,6 +100,6 @@ function deleteFile(req,res,next){
 }
 
 module.exports = {
-    uploadFile:uploadFile,
+    uploadVideo:uploadVideo,
     deleteFile : deleteFile
 }
