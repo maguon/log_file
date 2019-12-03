@@ -72,16 +72,16 @@ function uploadVideo(req,res,next){
         }
     }).seq(function(){
         videoDAO.saveVideoMetaData(metadata,function(err,result){
-            if (error) {
-                logger.error(' uploadVideo snap ' + error.message);
+            if (err) {
+                logger.error(' uploadVideo snap ' + err.message);
                 resUtil.resInternalError(error, res, next);
                 return next();
             }else{
-                var res = {
+                var resObj = {
                     snap : metadata.snap,
                     url : metadata.url
                 }
-                resUtil.resetQueryRes(res, res);
+                resUtil.resetQueryRes(res, resObj);
                 return next();
             }
         });
