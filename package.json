@@ -7,6 +7,7 @@
         "fastdfs-client": "^1.0.2",
         "gm": "1.22.0",
         "log4js": "3.0.2",
+        "md5": "^2.2.1",
         "mongodb": "2.2.36",
         "posix-getopt": "1.0.0",
         "restify": "4.3.4",

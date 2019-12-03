@@ -12,6 +12,7 @@ function uploadFile(req,res,next){
     var file = req.files.file;
     var params = req.params;
     var metadata ={};
+    console.log(file);
     if(params.fileType){
         metadata.fileType = params.fileType;
     }
