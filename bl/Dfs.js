@@ -106,7 +106,23 @@ function deleteFile(req,res,next){
     })
 }
 
+function getVideoInfo(req,res,next) {
+    var params = req.params;
+    videoDAO.findVideo(params,function (error,result) {
+        if (error) {
+            logger.error(' uploadFile ' + error.message);
+            resUtil.resInternalError(error, res, next);
+        }else{
+
+            logger.info(' uploadFile ' + 'success')
+            resUtil.resetQueryRes(res, result);
+            return next();
+        }
+    })
+}
+
 module.exports = {
     uploadVideo:uploadVideo,
+    getVideoInfo : getVideoInfo,
     deleteFile : deleteFile
 }
