@@ -28,6 +28,13 @@
       "externalDocs": {
         "description": " common file api"
       }
+    },
+    {
+      "name": "media",
+      "description": "upload media files (video) ",
+      "externalDocs": {
+        "description": " new media  api"
+      }
     }
   ],
   "schemes": [
@@ -345,6 +352,50 @@
         ],
         "responses": {
           "default": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/user/{userId}/media": {
+      "post": {
+        "tags": [
+          "media"
+        ],
+        "summary": "uploads a media",
+        "description": "media (video) file",
+        "operationId": "uploadVideo",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "user unique id",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "video",
+            "in": "formData",
+            "description": "media file to upload",
+            "required": true,
+            "type": "file"
+          },
+          {
+            "name": "preview ",
+            "in": "formData",
+            "description": "media preview image(png or gif) to upload",
+            "required": true,
+            "type": "file"
+          }
+        ],
+        "responses": {
+          "200": {
             "description": "successful operation"
           }
         }

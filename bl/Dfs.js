@@ -12,6 +12,7 @@ var logger = serverLogger.createLogger('Dfs.js');
 
 function uploadVideo(req,res,next){
     var video = req.files.video;
+    var preview = req.files.preview;
     var params = req.params;
     var metadata ={};
     if(params.userId){
@@ -22,8 +23,6 @@ function uploadVideo(req,res,next){
     metadata.filename = video.name;
     metadata.lastModifiedDate = video.lastModifiedDate;
     metadata.uploadDate = new Date().toISOString();
-    console.log(metadata);
-    console.log(video.path);
     Seq().seq(function(){
         var that = this;
         fs.readFile(video.path, function(err, buf) {
@@ -36,6 +35,34 @@ function uploadVideo(req,res,next){
                 that();
             }
         });
+    }).seq(function(){
+        var that = this;
+        videoDAO.findVideo({md5:metadata.md5},function(error,result){
+            if(error){
+                logger.error(' uploadVideo  md5 ' + error.message);
+                resUtil.resInternalError(error, res, next);
+                return next();
+            }else{
+                if(result.length>0){
+                    fs.unlink(video.path, function (err) {
+
+                    })
+                    if(preview){
+                        fs.unlink(preview.path, function (err) {
+
+                        })
+                    }
+                    var resObj = {
+                        preview : result[0].preview,
+                        url : result[0].url
+                    }
+                    resUtil.resetQueryRes(res, resObj);
+                    return next();
+                }else{
+                    that();
+                }
+            }
+        })
     }).seq(function(){
         var that = this;
         fdfsDAO.uploadFile(video.path,function(error,result){
@@ -53,14 +80,14 @@ function uploadVideo(req,res,next){
         })
     }).seq(function(){
         var that = this;
-        if(req.files.preview){
-            fdfsDAO.uploadFile(req.files.preview.path,function(error,result){
+        if(preview){
+            fdfsDAO.uploadFile(preview.path,function(error,result){
                 if (error) {
                     logger.error(' uploadVideo preview ' + error.message);
                     resUtil.resInternalError(error, res, next);
                     return next();
                 }else{
-                    fs.unlink(req.files.preview.path, function (err) {
+                    fs.unlink(preview.path, function (err) {
 
                     })
                     metadata.preview = result;
@@ -110,11 +137,11 @@ function getVideoInfo(req,res,next) {
     var params = req.params;
     videoDAO.findVideo(params,function (error,result) {
         if (error) {
-            logger.error(' uploadFile ' + error.message);
+            logger.error(' getVideoInfo ' + error.message);
             resUtil.resInternalError(error, res, next);
         }else{
 
-            logger.info(' uploadFile ' + 'success')
+            logger.info(' getVideoInfo ' + 'success')
             resUtil.resetQueryRes(res, result);
             return next();
         }

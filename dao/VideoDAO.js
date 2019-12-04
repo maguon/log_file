@@ -22,7 +22,17 @@ var findVideo = function(params,callback){
             callback(err, null);
             return;
         }
-        db.collection('video_meta').find(params,function(err,result){
+        var subParams = {};
+        if(params.id){
+            subParams._id = new ObjectID(params.id)
+        }
+        if(params.userId){
+            subParams.userId = params.userId;
+        }
+        if(params.md5){
+            subParams.md5 = params.md5;
+        }
+        db.collection('video_meta').find(subParams).toArray(function(err,result){
             callback(err,result)
         })
     })
