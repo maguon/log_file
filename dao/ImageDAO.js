@@ -7,8 +7,8 @@ var logger = serverLogger.createLogger('ImageDAO.js');
 var fs = require('fs');
 var Seq = require('seq');
 var ObjectID = require('mongodb').ObjectID;
-var GridStore = require('mongodb').GridStore;
-var gm = require('gm').subClass({ imageMagick: true });
+var GridFSBucket = require('mongodb').GridFSBucket;
+var gm = require('gm').subClass({ imageMagick: true });;
 
 var f_width=640,f_height=640,m_width=240,m_height=240,s_width=80,s_height=80,quality=75;
 
@@ -38,10 +38,8 @@ function _format(image,callback){
             if (err){
                 logger.error(' _format ' + err.message);
                 return callback(err);
-            }
-            if ('JPEG'!= type){
-                //set format
-                gm(image.path).setFormat("jpeg").write(out,function(err){
+            }else{
+                gm(image.path).write(out,function(err){
                         if (err){
                             logger.error(' _format ' + err.message);
                             return callback(err);
@@ -55,6 +53,7 @@ function _format(image,callback){
                             }else{
                                 image.path=out+"-0";
                             }
+                            //callback();
 
                             fs.unlink(oldImage,function(err){
                                 if (err) {
@@ -66,10 +65,8 @@ function _format(image,callback){
                         }
                     }
                 );
-            }else{
-                logger.info(' _format ' + 'success');
-                return callback();
             }
+
         }
     );
 }
@@ -83,12 +80,13 @@ function _strip(image,callback){
             }else{
                 var oldImage=image.path;
                 image.path=out;
-                fs.unlink(oldImage,function(err){
+                return callback();
+                /*fs.unlink(oldImage,function(err){
                     if (err) {
                         logger.error(' _strip ' + err.message);
                     }
                     return callback(err);
-                })
+                })*/
 
             }
         }
@@ -109,7 +107,7 @@ function _compress(image,callback){
             }
         );}).seq(function(){
             var that=this;
-            gm(image.path).compress("jpeg").quality(quality).write(outFile, function (err) {
+            gm(image.path).quality(quality).write(outFile, function (err) {
                 if (err){
                     logger.error(' _compress ' + err.message);
                     that(err);
@@ -181,10 +179,38 @@ function saveImage(image,metaData,callback){
         var imageId = new ObjectID().toHexString();
         Seq().seq(function(){
             var that = this;
-            that();
-            preImage(image,this);
+
+            preImage(image,function(err){
+                if(err){
+                    console.log(err);
+                    return callback(err, null);
+                }else{
+                    that();
+                }
+
+            });
+
         }).seq(function(){
-                var gridStore = new GridStore(db, imageId, imageId+".jpeg", 'w', {content_type: image.type, metadata: metaData});
+            try {
+                var bucket = new GridFSBucket(db.db(), {bucketName:'fs'});
+            }catch (err){
+                callback(err,null);
+            }
+
+            var uploadStream = bucket.openUploadStreamWithId(imageId,imageId+".jpeg",{contentType: image.type, metadata: metaData});
+            var imageReadStream = fs.createReadStream(image.path);
+            imageReadStream.pipe(uploadStream).on('error',function(error){
+                return callback(error, null);
+            });
+            uploadStream.on("finish", function() {
+                fs.unlink(image.path, function (err) {console.log(err)});
+                return callback(null, imageId);
+            });
+
+
+
+
+                /*var gridStore = new GridStore(db, imageId, imageId+".jpeg", 'w', {content_type: image.type, metadata: metaData});
 
                 gridStore.open(function (err, gridStore) {
                     // Write the file to gridFS
@@ -193,12 +219,12 @@ function saveImage(image,metaData,callback){
                             return callback(err,imageId);
                         } else {
                             return callback(null, imageId);
-                            /*fs.unlink(image.path, function (err) {
+                            /!*fs.unlink(image.path, function (err) {
 
-                            });*/
+                            });*!/
                         }
                     });
-                })
+                })*/
         })
 
     });
@@ -345,7 +371,8 @@ function getMetaData(imageId,option, callback) {
             //db.close();
             return callback(err, null);
         }
-        db.createCollection('fs.files', function (err, collection) {
+
+        db.db().collection('fs.files', function (err, collection) {
             if (err) {
                 logger.error(' getMetaData ' + err.message);
                 return callback(err, null);
@@ -366,8 +393,13 @@ function getImage(imageId,option,callback){
             db.close();
             return callback(err, null);
         }
-
-        var gridStore = new GridStore(db,fileId, '', "r");
+        var bucket = new GridFSBucket(db.db(), {bucketName:'fs'});
+        var readstream = bucket.openDownloadStream(fileId).on('error',function(err){
+            logger.warn(' getImage ' + err.message);
+            return callback(err, null);
+        });
+        return callback(null, readstream);
+        /*var gridStore = new GridStore(db,fileId, '', "r");
         gridStore.open(function (err, gridStore) {
 
             if (err) {
@@ -382,7 +414,7 @@ function getImage(imageId,option,callback){
             logger.debug(' getImage ' + fileId +' success');
             return callback(null, stream);
 
-        });
+        });*/
     });
 }
 
