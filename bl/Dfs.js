@@ -13,6 +13,8 @@ var logger = serverLogger.createLogger('Dfs.js');
 function uploadVideo(req,res,next){
     var video = req.files.video;
     var preview = req.files.preview;
+    console.log(req.files);
+    console.log(req.files.preview);
     var params = req.params;
     var metadata ={};
     if(params.userId){
