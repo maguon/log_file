@@ -13,8 +13,6 @@ var logger = serverLogger.createLogger('Dfs.js');
 function uploadVideo(req,res,next){
     var video = req.files.video;
     var preview = req.files.preview;
-    console.log(req.files);
-    console.log(req.files.preview);
     var params = req.params;
     var metadata ={};
     if(params.userId){
@@ -82,6 +80,7 @@ function uploadVideo(req,res,next){
         })
     }).seq(function(){
         var that = this;
+        console.log(preview);
         if(preview){
             fdfsDAO.uploadFile(preview.path,function(error,result){
                 if (error) {
