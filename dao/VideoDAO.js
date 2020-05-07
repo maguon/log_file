@@ -10,7 +10,7 @@ var saveVideoMetaData = function(params,callback){
             callback(err, null);
             return;
         }
-        db.collection('video_meta').save(params,function(err,result){
+        db.db().collection('video_meta').save(params,function(err,result){
             callback(err,result)
         })
     })
@@ -32,7 +32,7 @@ var findVideo = function(params,callback){
         if(params.md5){
             subParams.md5 = params.md5;
         }
-        db.collection('video_meta').find(subParams).toArray(function(err,result){
+        db.db().collection('video_meta').find(subParams).toArray(function(err,result){
             callback(err,result)
         })
     })
