@@ -387,7 +387,7 @@
             "type": "file"
           },
           {
-            "name": "preview ",
+            "name": "preview",
             "in": "formData",
             "description": "media preview image(png or gif) to upload",
             "required": true,
