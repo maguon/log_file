@@ -27,7 +27,7 @@ function uploadVideo(req,res,next){
         var that = this;
         fs.readFile(video.path, function(err, buf) {
             if(err){
-                logger.error(' uploadVideo  md5 ' + error.message);
+                logger.error(' uploadVideo  read ' + error.message);
                 resUtil.resInternalError(error, res, next);
                 return next();
             }else{
@@ -39,7 +39,7 @@ function uploadVideo(req,res,next){
         var that = this;
         videoDAO.findVideo({md5:metadata.md5},function(error,result){
             if(error){
-                logger.error(' uploadVideo  md5 ' + error.message);
+                logger.error(' uploadVideo  find by md5 ' + error.message);
                 resUtil.resInternalError(error, res, next);
                 return next();
             }else{
@@ -101,7 +101,7 @@ function uploadVideo(req,res,next){
     }).seq(function(){
         videoDAO.saveVideoMetaData(metadata,function(err,result){
             if (err) {
-                logger.error(' uploadVideo preview ' + err.message);
+                logger.error(' uploadVideo save preview ' + err.message);
                 resUtil.resInternalError(err, res, next);
                 return next();
             }else{
