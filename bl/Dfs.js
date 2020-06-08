@@ -19,12 +19,10 @@ function uploadVideo(req,res,next){
         metadata.userId = params.userId;
     }
     metadata.contentType = video.type;
-    console.log(video);
     metadata.size = video.size;
     metadata.filename = video.name;
     metadata.lastModifiedDate = video.lastModifiedDate;
     metadata.uploadDate = new Date().toISOString();
-    console.log(metadata);
     Seq().seq(function(){
         var that = this;
         fs.readFile(video.path, function(err, buf) {
@@ -84,6 +82,7 @@ function uploadVideo(req,res,next){
     }).seq(function(){
         var that = this;
         console.log(preview);
+        console.log( req.files.preview);
         if(preview){
             fdfsDAO.uploadFile(preview.path,function(error,result){
                 if (error) {
