@@ -19,6 +19,7 @@ function uploadVideo(req,res,next){
         metadata.userId = params.userId;
     }
     metadata.contentType = video.type;
+    console.log(video);
     metadata.size = video.size;
     metadata.filename = video.name;
     metadata.lastModifiedDate = video.lastModifiedDate;
