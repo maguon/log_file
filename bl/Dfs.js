@@ -32,6 +32,7 @@ function uploadVideo(req,res,next){
                 return next();
             }else{
                 metadata.md5 =md5(buf);
+                console.log(metadata.md5);
                 that();
             }
         });
