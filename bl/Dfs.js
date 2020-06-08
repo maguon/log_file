@@ -23,6 +23,7 @@ function uploadVideo(req,res,next){
     metadata.filename = video.name;
     metadata.lastModifiedDate = video.lastModifiedDate;
     metadata.uploadDate = new Date().toISOString();
+    console.log(metadata);
     Seq().seq(function(){
         var that = this;
         fs.readFile(video.path, function(err, buf) {
