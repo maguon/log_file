@@ -32,7 +32,6 @@ function uploadVideo(req,res,next){
                 return next();
             }else{
                 metadata.md5 =md5(buf);
-                console.log(metadata.md5);
                 that();
             }
         });
@@ -81,8 +80,6 @@ function uploadVideo(req,res,next){
         })
     }).seq(function(){
         var that = this;
-        console.log(preview);
-        console.log( req.files.preview);
         if(preview){
             fdfsDAO.uploadFile(preview.path,function(error,result){
                 if (error) {
