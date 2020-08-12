@@ -26,7 +26,7 @@ function saveFile(file,metaData,callback){
         // file ID, if it has file id override the old one
         var fileId = new ObjectID().toHexString();
         Seq().seq(function(){
-            var gridStore = new GridStore(db, fileId, file.name, 'w', {content_type: file.type, metadata: metaData});
+            var gridStore = new GridStore(db.db(), fileId, file.name, 'w', {content_type: file.type, metadata: metaData});
 
             gridStore.open(function (err, gridStore) {
                 // Write the file to gridFS
@@ -80,7 +80,7 @@ function getMetaData(params, callback) {
             //db.close();
             return callback(err, null);
         }
-        db.createCollection('fs.files', function (err, collection) {
+        db.db().createCollection('fs.files', function (err, collection) {
             if (err) {
                 logger.error(' getMetaData ' + err.message);
                 return callback(err, null);
