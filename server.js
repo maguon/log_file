@@ -46,7 +46,7 @@ function createServer() {
     server.use(restify.plugins.gzipResponse());
 
 
-    var STATIS_FILE_RE = /\.(css|js|jpe?g|png|gif|less|eot|svg|bmp|tiff|ttf|otf|woff|pdf|ico|json|wav|ogg|mp3?|xml|woff2|map)$/i;
+    var STATIS_FILE_RE = /\.(css|js|png|gif|less|eot|svg|bmp|tiff|ttf|otf|woff|pdf|ico|json|wav|ogg|mp3?|xml|woff2|map)$/i;
     server.get(STATIS_FILE_RE, restify.serveStatic({ directory: './public/docs', default: 'index.html', maxAge: 0 }));
 //    server.get(/^\/((.*)(\.)(.+))*$/, restify.serveStatic({ directory: './TruMenuWeb', default: "index.html" }));
 
@@ -76,6 +76,10 @@ function createServer() {
     server.get('/api/user/:userId/media',dfs.getVideoInfo);
     server.get('/api/user/:userId/file/:fileId' , fileBl.getFile);
     server.get('/api/file/:fileId/video.mp4' , fileBl.getVideo);
+
+    server.post({path:'/api/avatar/:userId',contentType: 'multipart/form-data'},image.uploadAvatar);
+    server.get('/api/avatar/:userId/avatar.jpg',image.getUserAvatar);
+
 
 
 

@@ -48,6 +48,31 @@ function getImageById(req, res, next) {
         });
     })
 }
+function getUserAvatar(req, res, next) {
+    var params = req.params;
+    var imageId = params.userId;
+
+
+    imageDao.getUserAvatar(imageId, {}, function (err, fstream) {
+
+        if (err) {
+            logger.error(' getUserAvatar ' + err.message);
+            res.redirect({
+                pathname: '/images/logo.png'}, next);
+            //return resUtil.resInternalError(err, res, next);
+        }else{
+            res.cache({maxAge: 31536000});
+            res.writeHead(200);
+            fstream.pipe(res);
+            fstream.once('end', function () {
+                logger.info(' getImageById ' + 'success');
+                next(false);
+            });
+        }
+
+
+    });
+}
 
 /**
  * upload user id image,return image id
@@ -63,6 +88,22 @@ function uploadImage(req, res, next) {
             return next(sysError.InternalError(error.message, sysMsg.SYS_INTERNAL_ERROR_MSG));
         } else {
             logger.info(' uploadUserIdImage ' + ' success ');
+            res.send(200, {success: true, imageId: path});
+            return next();
+        }
+    })
+}
+
+function uploadAvatar(req, res, next) {
+    var params = req.params;
+    var metaData = {};
+    metaData.userId = params.userId;
+    imageDao.saveAvatar(params.userId,req.files.image, metaData, function (error, path) {
+        if (error) {
+            logger.error(' uploadAvatar ' + error.message);
+            return next(sysError.InternalError(error.message, sysMsg.SYS_INTERNAL_ERROR_MSG));
+        } else {
+            logger.info(' uploadAvatar ' + ' success ');
             res.send(200, {success: true, imageId: path});
             return next();
         }
@@ -122,5 +163,7 @@ function uploadImageSet(req, res, next) {
 module.exports = {
     getImageById: getImageById,
     uploadImage: uploadImage,
-    uploadImageSet: uploadImageSet
+    uploadImageSet: uploadImageSet,
+    uploadAvatar: uploadAvatar,
+    getUserAvatar: getUserAvatar
 }

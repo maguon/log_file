@@ -68,6 +68,70 @@
         }
       }
     },
+    "/avatar/{userId}/avatar.jpg": {
+      "get": {
+        "tags": [
+          "image"
+        ],
+        "summary": "get user avatar",
+        "description": "user unique id  ",
+        "operationId": "getUserAvatar",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "The user unique id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/avatar/{userId}": {
+      "post": {
+        "tags": [
+          "image"
+        ],
+        "summary": "uploads user avatar",
+        "description": "imageType(99:avatar)",
+        "operationId": "uploadFile",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "user unique id ",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "image",
+            "in": "formData",
+            "description": "file to upload",
+            "required": true,
+            "type": "file"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
     "/user/{userId}/image": {
       "post": {
         "tags": [

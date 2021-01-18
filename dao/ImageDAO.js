@@ -418,10 +418,107 @@ function getImage(imageId,option,callback){
     });
 }
 
+function saveAvatar(userId,image,metaData,callback){
+    var bucket = null;
+    var imageId = userId;
+    var existFlag = true;
+    if (!image) {
+        logger.warn(' saveAvatar ' + 'Image is not found');
+        return callback(new Error("Image is not found") , null);
+    }
+    metaData.filename = image.name;
+    mongodb.getDb(function (err, db) {
+        if (err) {
+            logger.error(' saveImage ' + err.message);
+            callback(err, null);
+            return;
+        }
+        // file ID, if it has file id override the old one
+
+        Seq().seq(function(){
+            var that = this;
+            preImage(image,function(err){
+                if(err){
+                    console.log(err);
+                    return callback(err, null);
+                }else{
+                    that();
+                }
+
+            });
+            that();
+        }).seq(function(){
+            var that = this;
+            try {
+                 bucket = new GridFSBucket(db.db(), {bucketName:'fs'});
+            }catch (err){
+                callback(err,null);
+            }
+            db.db().collection('fs.files').findOne({_id: imageId}, function (err, result) {
+                if(result){
+                    existFlag=true;
+                }else{
+                    existFlag=false;
+                }
+                that();
+            });
+
+        }).seq(function(){
+            var that = this;
+            if(existFlag){
+                bucket.delete(imageId,function(err,res){
+                    if(err){
+                        console.log(err);
+                        return callback(err, null);
+                    }else{
+                        that();
+                    }
+                })
+            }else{
+                that();
+            }
+
+        }).seq(function(){
+            var uploadStream = bucket.openUploadStreamWithId(imageId,imageId+".jpeg",{contentType: image.type, metadata: metaData});
+            var imageReadStream = fs.createReadStream(image.path);
+            imageReadStream.pipe(uploadStream).on('error',function(error){
+                return callback(error, null);
+            });
+            uploadStream.on("finish", function() {
+                fs.unlink(image.path, function (err) {console.log(err)});
+                return callback(null, imageId);
+            });
+        })
+
+    });
+}
+function getUserAvatar(userId,option,callback){
+    var fileId = getFileId(userId, option);
+    mongodb.getDb(function (err, db) {
+        if (err) {
+            logger.error(' getUserAvatar ' + err.message);
+            db.close();
+            return callback(err, null);
+        }
+        var bucket = new GridFSBucket(db.db(), {bucketName:'fs'});
+        var readstream = bucket.openDownloadStream(fileId).on('error',function(err){
+            logger.warn(' getUserAvatar ' + err.message);
+            return callback(err, null);
+        }).on('file',function(){
+            return callback(null, readstream);
+        }).on('data',function(){
+            logger.info('getUserAvatar data')
+            //return callback(null, readstream);
+        });
+
+    });
+}
 
 module.exports = {
     saveImage : saveImage,
     getImage : getImage ,
     getMetaData : getMetaData,
-    saveImageSet: saveImageSet
+    saveImageSet: saveImageSet,
+    saveAvatar : saveAvatar,
+    getUserAvatar: getUserAvatar
 }
